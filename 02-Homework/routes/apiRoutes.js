@@ -5,10 +5,13 @@
 // ===============================================================================
 
 var db = require("../Develop/db/db");
-var fs = require("fs");
-var util = require("util");
+const fs = require("fs");
+const util = require("util");
+const writeFileAsync = util.promisify(fs.writeFile);
 
-
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
 
 // ===============================================================================
 // ROUTING
@@ -27,6 +30,13 @@ module.exports = function(app) {
 
   });
 
+
+  app.get("/api/notes/:id", function(req, res) {
+    let id = req.params.id;
+
+    return res.json(db[id - 1]);
+});
+
   
 
   // API POST Requests
@@ -37,30 +47,56 @@ module.exports = function(app) {
   // Then the server saves the data to the tableData array)
   // ---------------------------------------------------------------------------
 
-  app.post("/api/notes", function(req, res) {
+  app.post("/api/notes", async function(req, res) {
      var addNew = req.body;
     // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
     // It will do this by sending out the value "true" have a table
     // req.body is available since we're using the body parsing middleware
+    if (isEmpty(db)) {
+      db = [];
+  }
+
       db.push(addNew);
       setNoteID();
+
+      let notes = JSON.stringify(db, null, 4);
+      await setSavedNotes(notes);
+
+      res.json(addNew);
+
   });
 
   // ---------------------------------------------------------------------------
   // I added this below code so you could clear out the table while working with the functionality.
   // Don"t worry about it!
 
-  app.post("/api/clear", function(req, res) {
-    // Empty out the arrays of data
-    tableData.length = 0;
-    waitListData.length = 0;
+  app.delete("/api/notes/:id", async function(req, res) {
+    var id = req.params.id;
 
-    res.json({ ok: true });
-  });
-};
+    db.forEach((el, index) => {
+        if (el.id == id) {
+            db.splice(index, 1);
+        }
+    });
+    setNoteID();
+
+    let note1 = JSON.stringify(db, null, 4);
+    await setSavedNotes(note1);
+    res.json(req.body);
+});
+}
 
 function setNoteID() {
-  notes.forEach((el, index) => {
+  db.forEach((el, index) => {
       el.id = index + 1
   });
+}
+
+
+function setSavedNotes(content) {
+  try {
+      return writeFileAsync("Develop/db/db", content);
+  } catch (err) {
+      console.log(err);
+  }
 }
