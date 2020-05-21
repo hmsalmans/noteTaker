@@ -6,6 +6,7 @@
 
 var db = require("../Develop/db/db");
 var fs = require("fs");
+var util = require("util");
 
 
 
@@ -22,10 +23,8 @@ module.exports = function(app) {
 
   app.get("/api/notes", function(req, res) { 
 
-    fs.readFile(__dirname + db, function(err, data) {
-      
-     res.json(data);
-    });
+    return (res.json(db));
+
   });
 
   
@@ -39,18 +38,12 @@ module.exports = function(app) {
   // ---------------------------------------------------------------------------
 
   app.post("/api/notes", function(req, res) {
-     var requestd = req.body;
+     var addNew = req.body;
     // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
     // It will do this by sending out the value "true" have a table
     // req.body is available since we're using the body parsing middleware
-    if (tableData.length < 5) {
-      tableData.push(req.body);
-      res.json(true);
-    }
-    else {
-      waitListData.push(req.body);
-      res.json(false);
-    }
+      db.push(addNew);
+      setNoteID();
   });
 
   // ---------------------------------------------------------------------------
@@ -65,3 +58,9 @@ module.exports = function(app) {
     res.json({ ok: true });
   });
 };
+
+function setNoteID() {
+  notes.forEach((el, index) => {
+      el.id = index + 1
+  });
+}
