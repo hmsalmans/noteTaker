@@ -26,4 +26,4 @@ From the root folder, run `node server.js` to start a local sever at port 8080. 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Contributing
-[<img src="https://avatars.githubusercontent.com/u/16821657?" width="60px" style="border-radius:30px">](https://github.com/hmsalmans)
+[<img src="https://avatars.githubusercontent.com/u/16821643?" width="60px" style="border-radius:30px">](https://github.com/hmsalmans)
