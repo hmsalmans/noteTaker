@@ -29,5 +29,3 @@ From the root folder, run `node server.js` to start a local sever at port 8080. 
 The App is deployed on heroku.
 [https://warm-ravine-40950.herokuapp.com/](https://warm-ravine-40950.herokuapp.com/)
 
-## Contributing
-[<img src="https://avatars.githubusercontent.com/u/16821643?" width="60px" style="border-radius:30px">](https://github.com/hmsalmans)
